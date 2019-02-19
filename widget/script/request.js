@@ -1,3 +1,6 @@
+apiready = function() {
+
+};
  var now = Date.now();
  var appId = 'A6918573369588',
      appKey = SHA1("A6918573369588" +"UZ" +"20C93719-0DE5-8C9B-2F05-36D9BB835C02" +"UZ" + now) +"." + now;
@@ -10,7 +13,7 @@
      });
 
      api.ajax({
-         url: 'https://d.apicloud.com/mcm/api/' + path + '?filter=' + JSON.stringify(filter),
+         url: 'http://gp.zishoulu.com/index.php/index/' + path + '?filter=' + JSON.stringify(filter),
          method: 'get',
          timeout: 5,
          dataType: 'json',
@@ -26,26 +29,26 @@
 
  function fnPost(path, data, contentType, callback, isLogin, isPut) {
      var headers = {
-        "X-APICloud-AppId": appId,
-        "X-APICloud-AppKey": appKey
+        "X-GP-AppId": appId,
+        "X-GP-AppKey": appKey
      };
 
      if (contentType) {
          headers["Content-Type"] = contentType
      }
 
-     if (isLogin) {
-         if (!$api.getStorage('loginInfo')) {
-             api.openWin({
-                 name: 'login_choose',
-                 url: './login_choose.html'
-             });
-             return;
-         }
-         var accessToken = $api.getStorage('loginInfo').id;
-
-         headers["authorization"] = accessToken;
-     }
+    //  if (isLogin) {
+    //      if (!$api.getStorage('loginInfo')) {
+    //          api.openWin({
+    //              name: 'login_choose',
+    //              url: './login_choose.html'
+    //          });
+    //          return;
+    //      }
+    //      var accessToken = $api.getStorage('loginInfo').id;
+     //
+    //      headers["authorization"] = accessToken;
+    //  }
 
      api.showProgress({
          title: '加载中',
@@ -53,7 +56,7 @@
      });
 
      api.ajax({
-         url: 'https://d.apicloud.com/mcm/api/' + path,
+         url: 'http://gp.zishoulu.com/index.php/index/' + path,
          method: isPut ? 'put' : 'post',
          timeout: 5,
          dataType: 'json',

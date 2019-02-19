@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget id="A6918573369588" version="0.0.1">
-    <name>dailynews</name>
+<widget id="A6005943128824" version="0.0.1">
+    <name>GP</name>
     <description>
-        Example For APICloud.
+        Gpx
     </description>
-    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+    <author email="619106640@qq.com" href="http://www.zishoulu.com/">
         Developer
     </author>
     <content src="index.html" />
@@ -31,7 +31,7 @@
     <permission name="hardware" />
     <preference name="softInputMode" value="resize"/>
     <feature name="qq">
-        <param name="urlScheme" value="tencent101064640" />
-        <param name="apiKey" value="101064640" />
+        <param name="urlScheme" value="tencent619106640" />
+        <param name="apiKey" value="A141ECB6-CB34-6FFD-8842-65BBA6602A37" />
     </feature>
 </widget>

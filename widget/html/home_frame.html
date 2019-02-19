@@ -21,21 +21,16 @@
 <body>
   <header class="aui-bar aui-bar-nav" style="margin-bottom:0.7rem;position:fixed;">
     <div class="aui-pull-left aui-btn aui-btn-outlined" style="border-color:transparent;">
-      <span class="aui-iconfont aui-icon-menu"></span>
-  </div>
-     <div class="aui-title" style="font-size: 0.85rem;">消息</div>
+      <span class="aui-iconfont aui-icon-question"></span>
+    </div>
+     <div class="aui-title" style="font-size: 0.85rem;">消息推送</div>
      <div class="aui-pull-right aui-btn aui-btn-outlined" style="border-color:transparent;">
 
-         <div class="aui-list-item-input">
-             <select >
-                 <option>全部消息</option>
-                 <option>Option2</option>
-                 <option>Option3</option>
-
-
-             </select>
-
-         </div>
+       <div class="aui-list-item-input" >
+              <select name="selectX" id="gPListX" onchange="resh()">
+                 <<option value="">全部消息</option>
+              </select>
+       </div>
      </div>
   </header>
 </br></br>
@@ -43,43 +38,46 @@
   <div id="headlist"></div>
 </body>
 <script id="template" type="text/template">
-  {{~ it:data }} {{? data.up_down==1}}
-  <div class="aui-timeline" onclick="fnOpenContent('{{= data.id }}')">
-       <div class="aui-timeline-item-header" style=""> {{=data.addtime}}</div>
+  {{~ it:data }} {{? data.beg_up_down==1}}
+       <div class="aui-timeline" >
+  <!--可跳转详情页 <div class="aui-timeline" onclick="fnOpenContent('{{= data.id }}')"> -->
+       <div class="aui-timeline-item-header" style="">{{=data.addtime}}&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;font-size:0.64rem;">{{=data.name}}</span></div>
        <div class="aui-timeline-item" >
            <div class="aui-timeline-item-label aui-bg-danger text-light" style="border-radius: .2rem;color:#fff;">
-             +{{=data.beg_range_rate}}%
+             <span style="font-weight:bold;">+{{=data.beg_range_rate}}%</span>
            </div>
            <div class="aui-timeline-item-inner">
                <div class="aui-card-list">
                    <div class="aui-card-list-content-padded">
-{{=data.name}}+测试+{{=data.id}}
+                   买一：价格[{{=data.buy1_price}}元]&nbsp;&nbsp;股数[{{=data.buy1_num}}股]<br/>
+                   卖一：价格[{{=data.sale1_price}}元]&nbsp;&nbsp;股数[{{=data.sale1_num}}股]
                    </div>
                    <div class="aui-card-list-footer aui-border-t aui-font-size-12">
-                       <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> 666</div>
-                       <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> 888</div>
-                       <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> 888</div>
+                       <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> {{=data.beg_price}}元</div>
+                       <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> <span style="font-weight:bold;">{{=data.cur_price}}元</span></div>
+                       <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> {{=data.beg_range}}元</div>
                    </div>
                </div>
            </div>
        </div>
    </div>
-   {{?? data.up_down==-1}}
-   <div class="aui-timeline" onclick="fnOpenContent('{{= data.id }}')">
-        <div class="aui-timeline-item-header" style=""> {{=data.addtime}}</div>
+   {{?? data.beg_up_down==-1}}
+   <div class="aui-timeline" >
+        <div class="aui-timeline-item-header" style="">{{=data.addtime}}&nbsp;&nbsp;&nbsp;<span style="font-weight:bold;font-size:0.64rem;">{{=data.name}}</span></div>
         <div class="aui-timeline-item" >
             <div class="aui-timeline-item-label aui-bg-success text-light" style="border-radius: .2rem;color:#fff;">
-              -{{=data.beg_range_rate}}%
+              <span style="font-weight:bold;">-{{=data.beg_range_rate}}%</span>
             </div>
             <div class="aui-timeline-item-inner">
                 <div class="aui-card-list">
                     <div class="aui-card-list-content-padded">
-{{=data.name}}+测试+{{=data.id}}
+                      买一：价格[{{=data.buy1_price}}元]&nbsp;&nbsp;股数[{{=data.buy1_num}}股]<br/>
+                      卖一：价格[{{=data.sale1_price}}元]&nbsp;&nbsp;股数[{{=data.sale1_num}}股]
                     </div>
                     <div class="aui-card-list-footer aui-border-t aui-font-size-12">
-                        <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> 666</div>
-                        <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> 888</div>
-                        <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> 888</div>
+                      <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> {{=data.beg_price}}元</div>
+                      <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> <span style="font-weight:bold;">{{=data.cur_price}}元</span></div>
+                      <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> {{=data.beg_range}}元</div>
                     </div>
                 </div>
             </div>
@@ -90,6 +88,7 @@
   <script type="text/javascript" src="../script/api.js"></script>
   <script type="text/javascript" src="../script/SHA1.js"></script>
   <script type="text/javascript" src="../script/doT.min.js"></script>
+  <script type="text/javascript" src="../script/request.js"></script>
   <script type="text/javascript" src="../script/APICloud-rest.js"></script>
   <script type="text/javascript">
     apiready = function() {
@@ -97,6 +96,8 @@
       fninit();
       headList(progress, isPull);
       fnInitPushRefresh();
+      getGpList();
+      $api.setStorage('gpCode','');
 
     };
     var frameName, search_box;
@@ -129,9 +130,42 @@
     }
 
 
+    function getGpList() {
+      //获取消息分类
+      fnPost('index/gpList', {
+          body: JSON.stringify({
+              userId: 1,
+          })
+      }, 'application/json', function(ret, err) {
+          var obj = ret;
+          var html = "";
+          var gpCode=$api.getStorage('gpCode');
+          for(var key in obj){
+                  if (gpCode==obj[key]["code"]) {
+                    html += '<option  value="'+ obj[key]["code"] +'">'+ obj[key]["name"] +'</option>';
+                  }else{
+                    html += '<option  value="'+ obj[key]["code"] +'">'+ obj[key]["name"] +'</option>';
+                  }
+
+          }
+          $api.append($api.byId('gPListX'),html);
+      });
+    }
+
+    function resh() {
+         var val=$api.byId('gPListX').value;
+         $api.setStorage('gpCode',val);
+         headList(progress, true);
+    }
 
 
 
+
+
+
+
+
+    //详情页
     function fnOpenContent(id) {
       api.openWin({
         name: 'head_content',
@@ -198,7 +232,8 @@
 
           Headlist.query({
             "filter": {
-              "where": {"type": typeNum},
+              "where": {"code": $api.getStorage('gpCode')},
+              "code" : $api.getStorage('gpCode'),
               "skip": skip,
               "page": skip/LIMIT+1,
               "limit": LIMIT
