@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+  <title>title</title>
+  <link rel="stylesheet" type="text/css" href="../css/api.css" />
+  <link rel="stylesheet" type="text/css" href="../aui2/css/aui.css" />
+  <style>
+    html,body{font-family: '\5FAE\8F6F\96C5\9ED1';height: 100%;background: #f1f1f1}
+    .aui-bar-nav{line-height: 1.8rem;}
+    .aui-bar{min-height: 1.8rem;font-size: 0.78rem;}
+    .aui-bar-nav .aui-btn.aui-btn-outlined{margin: 0.4rem;}
+    .aui-card-list-content-padded{padding: 0.4rem 0.45rem;}
+    .aui-bar-nav .aui-title{line-height: 2rem;}
+    .aui-card-list-header, .aui-card-list-footer{min-height: 1.6rem;padding-top:0.1rem;padding-bottom:0.1rem;}
+
+  </style>
+</head>
+
+<body>
+  <header class="aui-bar aui-bar-nav" style="margin-bottom:0.7rem;position:fixed;">
+    <div class="aui-pull-left aui-btn aui-btn-outlined" style="border-color:transparent;">
+      <span class="aui-iconfont aui-icon-menu"></span>
+  </div>
+     <div class="aui-title" style="font-size: 0.85rem;">消息</div>
+     <div class="aui-pull-right aui-btn aui-btn-outlined" style="border-color:transparent;">
+
+         <div class="aui-list-item-input">
+             <select >
+                 <option>全部消息</option>
+                 <option>Option2</option>
+                 <option>Option3</option>
+
+
+             </select>
+
+         </div>
+     </div>
+  </header>
+</br></br>
+
+  <div id="headlist"></div>
+</body>
+<script id="template" type="text/template">
+  {{~ it:data }} {{? data.up_down==1}}
+  <div class="aui-timeline" onclick="fnOpenContent('{{= data.id }}')">
+       <div class="aui-timeline-item-header" style=""> {{=data.addtime}}</div>
+       <div class="aui-timeline-item" >
+           <div class="aui-timeline-item-label aui-bg-danger text-light" style="border-radius: .2rem;color:#fff;">
+             +{{=data.beg_range_rate}}%
+           </div>
+           <div class="aui-timeline-item-inner">
+               <div class="aui-card-list">
+                   <div class="aui-card-list-content-padded">
+{{=data.name}}+测试+{{=data.id}}
+                   </div>
+                   <div class="aui-card-list-footer aui-border-t aui-font-size-12">
+                       <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> 666</div>
+                       <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> 888</div>
+                       <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> 888</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   {{?? data.up_down==-1}}
+   <div class="aui-timeline" onclick="fnOpenContent('{{= data.id }}')">
+        <div class="aui-timeline-item-header" style=""> {{=data.addtime}}</div>
+        <div class="aui-timeline-item" >
+            <div class="aui-timeline-item-label aui-bg-success text-light" style="border-radius: .2rem;color:#fff;">
+              -{{=data.beg_range_rate}}%
+            </div>
+            <div class="aui-timeline-item-inner">
+                <div class="aui-card-list">
+                    <div class="aui-card-list-content-padded">
+{{=data.name}}+测试+{{=data.id}}
+                    </div>
+                    <div class="aui-card-list-footer aui-border-t aui-font-size-12">
+                        <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> 666</div>
+                        <div><i class="aui-iconfont aui-icon-laud aui-font-size-14"></i> 888</div>
+                        <div><i class="aui-iconfont aui-icon-star aui-font-size-14"></i> 888</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{?}} {{~}}
+  </script>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/SHA1.js"></script>
+  <script type="text/javascript" src="../script/doT.min.js"></script>
+  <script type="text/javascript" src="../script/APICloud-rest.js"></script>
+  <script type="text/javascript">
+    apiready = function() {
+      fnInitPull();
+      fninit();
+      headList(progress, isPull);
+      fnInitPushRefresh();
+
+    };
+    var frameName, search_box;
+    var headlist, dot;
+    var dataLoading = false,
+    isEmpty = false,
+    skip = 0,
+    LIMIT = 15,
+    progress = true,
+    isPull = true;
+    var typeNum;
+
+    function fnChangeMessage() {
+      var frameName = api.frameName;
+
+      var num = frameName.substring(11);
+      search_box = $api.byId('search_box');
+      if (num == 1) {
+        typeNum = 0;
+        search_box.style.display = "none";
+      } else if (num == 2) {
+        typeNum = 2;
+        search_box.style.display = "none";
+      } else if (num == 3) {
+        typeNum = 1;
+        search_box.style.display = "none";
+      } else {
+        typeNum == '';
+      }
+    }
+
+
+
+
+
+    function fnOpenContent(id) {
+      api.openWin({
+        name: 'head_content',
+        url: './head_content.html',
+        pageParam: {
+          id: id
+        }
+      });
+    };
+        // 刷新
+        function fnInitPull() {
+          api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#f0f0f0',
+            textColor: '#888',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...',
+            showTime: true
+          }, function(ret, err) {
+            api.refreshHeaderLoadDone();
+            headList(progress, true);
+          });
+        };
+        // doT
+        function fninit() {
+          headlist = $api.byId('headlist');
+          var template = $api.byId('template');
+          dot = doT.template(template.innerHTML);
+
+        }
+        // 获取信息
+
+
+        function headList(progress, isPull) {
+          if (dataLoading) {
+            return;
+          }
+          dataLoading = true;
+
+          if (isPull) {
+            skip = 0;
+            isEmpty = false;
+          }
+
+          if (isEmpty) {
+            api.toast({
+              msg: '没有更多了',
+              duration: 2000,
+              location: 'bottom'
+            });
+            dataLoading = false;
+            return;
+          }
+          if (progress) {
+            api.showProgress({
+              title: '加载中',
+              modal: false
+            });
+          }
+          var client = new Resource("A6918573369588", "20C93719-0DE5-8C9B-2F05-36D9BB835C02");
+          var Headlist = client.Factory("index/msg");
+          fnChangeMessage();
+
+          Headlist.query({
+            "filter": {
+              "where": {"type": typeNum},
+              "skip": skip,
+              "page": skip/LIMIT+1,
+              "limit": LIMIT
+            }
+          }, function(ret, err) {
+
+            //alert(JSON.stringify(ret));
+
+            api.hideProgress();
+            api.refreshHeaderLoadDone();
+            dataLoading = false;
+            //fnCacheImage(ret, 0);
+
+            if (!ret) {
+              api.toast({
+                msg: '网络不给力',
+                duration: 2000,
+                location: 'bottom'
+              });
+              return;
+            }
+
+            skip += LIMIT;
+            if (ret.length < LIMIT) {
+              isEmpty = true;
+            }
+
+            if (ret.length == 0) {
+              return;
+            }
+            //alert(JSON.stringify(ret2[0]));
+            if (isPull) {
+              headlist.innerHTML = dot(ret);
+            } else {
+              //sheadlist.innerHTML += dot(ret);
+              headlist.innerHTML += dot(ret);
+            }
+
+
+            // var userText = '12x3',passwordText = '123456';
+            //
+            // fnPost('index/msg', {
+            //     body: JSON.stringify({
+            //         username: userText,
+            //         password: passwordText
+            //     })
+            // }, 'application/json', function(ret, err) {
+            //
+            // });
+          })
+        }
+        // 下拉加载更多
+        function fnInitPushRefresh() {
+          api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+              threshold: 200
+            }
+          }, function(ret, err) {
+            headList(progress, false);
+          });
+        };
+        //设置图片
+
+
+
+      </script>
+
+      </html>

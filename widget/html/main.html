@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>Hello APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+          <link rel="stylesheet" type="text/css" href="../aui2/css/aui.css" />
+        <style>
+            html,
+            body {
+                height: 100%;
+                display: flex;
+                display: -webkit-flex;
+                display: -webkit-box;
+                flex-flow: column;
+                -webkit-flex-flow: column;
+                -webkit-box-orient: vertical;
+            }
+            .content {
+                -webkit-flex: 1px;
+                flex: 1px;
+                -webkit-box-flex: 1;
+                background-color: #f4f5f6;
+            }
+            .footer {
+                height:47px;
+                display: flex;
+                display: -webkit-flex;
+                display: -webkit-box;
+                flex-flow: row;
+                -webkit-flex-flow: row;
+                -webkit-box-orient: horizontal;
+                background-color: #f4f5f6;
+            }
+            .menu {
+                flex: 1;
+                -webkit-flex: 1;
+                -webkit-box-flex: 1;
+                height: 47px;
+                box-sizing: border-box;
+                padding-bottom: 8px;
+                padding-top: 30px;
+                color: #585858;
+                font-size: 10px;
+                text-align: center;
+                background-size: 22px 22px;
+                background-position: center 5px;
+                background-repeat: no-repeat;
+            }
+            .footer .home {
+                background-image: url(../image/footer/home.png);
+            }
+
+            .footer .video {
+                background-image: url(../image/footer/video.png);
+            }
+
+            .footer .gambit {
+                background-image: url(../image/footer/gambit.png);
+            }
+
+            .footer .my {
+                background-image: url(../image/footer/my.png);
+            }
+
+            .footer .home.active {
+                background-image: url(../image/footer/home_act.png);
+            }
+
+            .footer .video.active {
+                background-image: url(../image/footer/video_act.png);
+            }
+
+            .footer .gambit.active {
+                background-image: url(../image/footer/gambit_act.png);
+            }
+
+            .footer .my.active {
+                background-image: url(../image/footer/my_act.png);
+            }
+        </style>
+    </head>
+
+    <body>
+
+
+
+        <header id="header">
+             <!-- <div class="header home active" style="text-align:center;color:#fff;font-size:1.1rem;">
+                 消息
+                <div class="add_btn btn" tapmode onclick="fnMore()"></div>
+            </div> -->
+             <!-- <div class="header video">
+                <div class="top-menu"></div>
+                <div class="search-video-btn" tapmode onclick="fnSearch();"></div>
+            </div>
+            <div class="header topic gambit_head">
+                 <div class="gambit_login" tapmode onclick="fnLogin()"></div>
+                <div class="gambit_menu gambit_recommend" id="top-menu">
+                    <div class="list active" tapmode onclick="changeStyle(0)">推荐</div>
+                    <div class="list em2" tapmode onclick="changeStyle(1)">关注</div>
+                </div>
+                <div class="gambit_seek" tapmode onclick="fnOpenThemeChoose();"></div>
+            </div>
+            <div class="header my"></div> -->
+        </header>
+        <header class="aui-bar aui-bar-nav" id="header2">顶部导航栏</header>
+
+        <section class="content"></section>
+        <footer id="footer" class="footer">
+            <div class="menu gambit active" tapmode="active" onclick="fnChange(0)">消息</div>
+            <div class="menu home  " tapmode="active" onclick="fnChange(1)">主页</div>
+            <div class="menu video" tapmode="active" onclick="fnChange(2)">股圈</div>
+            <div class="menu my" tapmode="active" onclick="fnChange(3)">我的</div>
+        </footer>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnInit();
+            fnChange(0);
+        };
+
+        // function changeStyle(index) {
+        //     var topMenu = $api.byId('top-menu');
+        //     var divs = $api.domAll(topMenu, 'div');
+        //     api.setFrameGroupIndex({
+        //         name: frameNames[2],
+        //         index: index,
+        //         scroll: true
+        //     });
+        //     for (var i = 0; i < divs.length; i++) {
+        //         if (i == index) {
+        //             $api.addCls(divs[i], 'active');
+        //         } else {
+        //             $api.removeCls(divs[i], 'active');
+        //         }
+        //     }
+        // }
+        var menus, headers, headerHeight, footerHeight, headerTop;
+        var navigationBar, home_group_id, video_group_id;
+
+        function fnInit() {
+            var header = $api.byId('header');
+            var header2 = $api.byId('header2');
+            var footer = $api.byId('footer');
+            menus = $api.domAll(footer, '.menu');
+            headers = $api.domAll(header, '.header');
+            footerHeight = $api.offset(footer).h;
+
+            for (var i = 0; i < headers.length; i++) {
+                $api.fixIos7Bar(headers[i]);
+            }
+
+            var offset = $api.offset(header);
+            headerHeight = offset.h;
+            headerTop = offset.t;
+
+            navigationBar = api.require('navigationBar');
+        };
+
+        var frameNames = ['home_group', 'video_group', 'topics_group', 'my_frame'];
+
+        function fnChange(index) {
+            for (var i = 0; i < menus.length; i++) {
+                if (index == i) {
+                    $api.addCls(menus[i], 'active');
+                    $api.addCls(headers[i], 'active');
+                    switch (i) {
+                        case 3:
+                            fnOpenFrame(i, true);
+                            break;
+                        case 2:
+                            fnOpenFrameGroup(i, true);
+                            break;
+                        default:
+                            fnOpenFrameGroup(i, true);
+                            fnNavigationBar(i, true);
+                            break;
+                    }
+                } else {
+                    $api.removeCls(menus[i], 'active');
+                    $api.removeCls(headers[i], 'active');
+                    switch (i) {
+                        case 3:
+                            fnOpenFrame(i, false);
+                            break;
+                        case 2:
+                            fnOpenFrameGroup(i, false);
+                            break;
+                        default:
+                            fnOpenFrameGroup(i, false);
+                            fnNavigationBar(i, false);
+                            break;
+                    }
+                }
+            }
+        };
+
+        function fnOpenFrame(index, isOpen) {
+            if (isOpen) {
+                api.openFrame({
+                    name: frameNames[index],
+                    url: './' + frameNames[index] + '.html',
+                    bounces: false,
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: api.winHeight - footerHeight
+                    },
+                    vScrollBarEnabled:false
+                });
+            } else {
+                api.setFrameAttr({
+                    name: frameNames[index],
+                    hidden: true
+                });
+            }
+        };
+
+        var home_group = {
+                item: [{
+                    title: '推荐',
+                    bg: '#d43d3d',
+                }],
+
+            },
+            video_group = {
+                item: [{
+                    title: '推荐',
+                    bg: '#fff',
+                }],
+
+            };
+
+        var currentIndex = 0;
+
+        function fnNavigationBar(index, isOpen) {
+            if (isOpen) {
+                currentIndex = index;
+                if (typeof window[frameNames[index] + '_id'] == 'undefined') {
+                    navigationBar.open({
+                        y: headerTop,
+                        w: api.winWidth - 50,
+                        h: headerHeight - headerTop,
+                        itemSize: {
+                            w: 60
+                        },
+                        items: window[frameNames[index]].item,
+                        font: window[frameNames[index]].font,
+                        selectedIndex: 0
+                    }, function(ret, err) {
+                        switch (ret.eventType) {
+                            case 'show':
+                                window[frameNames[currentIndex] + '_id'] = ret.id;
+                                break;
+                            case 'click':
+                                api.setFrameGroupIndex({
+                                    name: frameNames[currentIndex],
+                                    index: ret.index,
+                                    scroll: true
+                                });
+                                break;
+                        }
+                    });
+                } else {
+                    navigationBar.show({
+                        id: window[frameNames[index] + '_id']
+                    });
+                }
+            } else {
+                if (typeof window[frameNames[index] + '_id'] != 'undefined') {
+                    navigationBar.hide({
+                        id: window[frameNames[index] + '_id']
+                    });
+                }
+            }
+        };
+
+        var home_group_frames = [],
+            video_group_frames = [];
+        for (var i = 0; i < home_group.item.length; i++) {
+            home_group_frames.push({
+                name: 'home_frame_' + i,
+                url: 'home_frame.html',
+                vScrollBarEnabled: false,
+                pageParam: {
+                    type: home_group.item[i].title
+                }
+            });
+        };
+
+        // for (var i = 0; i < video_group.item.length; i++) {
+        //     video_group_frames.push({
+        //         name: 'video_group_' + i,
+        //         url: 'video_frame.html',
+        //         vScrollBarEnabled: false,
+        //         pageParam: {
+        //             type: '视频',
+        //             childType: video_group.item[i].title
+        //         }
+        //     });
+        // };
+
+        var topics_group_frames = [{
+            name: ' recommentlist_frame',
+            url: './recommentlist_frame.html',
+            vScrollBarEnabled: false
+        }, {
+            name: 'themelist_frame',
+            url: './themelist_frame.html',
+            vScrollBarEnabled: false
+        }];
+
+        function fnOpenFrameGroup(index, isOpen) {
+            if (isOpen) {
+                currentIndex = index;
+                api.openFrameGroup({
+                    name: frameNames[index],
+                    scrollEnabled: true,
+                    rect: {
+                        x: 0,
+                        y: headerHeight,
+                        w: 'auto',
+                        h: api.winHeight - headerHeight - footerHeight
+                    },
+                    index: 0,
+                    frames: window[frameNames[index] + '_frames']
+                }, function(ret, err) {
+
+                    if (currentIndex < 2) {
+                        navigationBar.config({
+                            id: window[frameNames[currentIndex] + '_id'],
+                            key: 'selectedIndex',
+                            value: ret.index
+                        });
+                    } else {
+                        changeStyle(ret.index);
+                    }
+                });
+            } else {
+                api.setFrameGroupAttr({
+                    name: frameNames[index],
+                    hidden: true
+                });
+            }
+        };
+
+        function fnOpenThemeChoose() {
+            api.openWin({
+                name: 'theme_choose',
+                url: 'theme_choose.html',
+
+            });
+        }
+
+        function fnLogin() {
+            api.openWin({
+                name: 'login_choose',
+                url: './login_choose.html'
+            });
+        }
+        // 搜索
+        function fnSearch() {
+            api.openWin({
+                name: 'search_home',
+                url: 'search_home.html'
+            });
+        }
+// more
+        function fnMore(){
+            api.openWin({
+                name: 'more',
+                url: './more.html',
+                animation:{
+                    type:"none",
+                    subType:"from_right",
+                    duration:100
+                }
+            });
+        }
+    </script>
+
+</html>
