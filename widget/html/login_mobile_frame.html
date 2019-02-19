@@ -132,7 +132,7 @@
             title: '登录中',
             modal: true
         });
-           fnPost('user/login', {
+           fnPost('user/userLogin', {
             body: JSON.stringify({
                 username: emailText,
                 password: passwordText
@@ -152,33 +152,7 @@
         });
        };
 
-       function fnPost(path, data, contentType, callback) {
-        api.showProgress({
-            title: '验证中',
-            modal: true
-        });
-
-        var headers = {
-            "X-APICloud-AppId": "A6918573369588",
-            "X-APICloud-AppKey": appKey1
-        };
-
-        if (contentType) {
-            headers["Content-Type"] = contentType
-        }
-        api.ajax({
-            url: 'https://d.apicloud.com/mcm/api/' + path,
-            method: 'post',
-            timeout: 5,
-            dataType: 'json',
-            returnAll: false,
-            headers: headers,
-            data: data
-        }, function(ret, err) {
-            api.hideProgress();
-            callback(ret, err);
-        });
-    };
+      
 
     function fnForgetPassword() {
         api.openWin({

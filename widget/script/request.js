@@ -37,18 +37,18 @@ apiready = function() {
          headers["Content-Type"] = contentType
      }
 
-    //  if (isLogin) {
-    //      if (!$api.getStorage('loginInfo')) {
-    //          api.openWin({
-    //              name: 'login_choose',
-    //              url: './login_choose.html'
-    //          });
-    //          return;
-    //      }
-    //      var accessToken = $api.getStorage('loginInfo').id;
-     //
-    //      headers["authorization"] = accessToken;
-    //  }
+     if (isLogin) {
+         if (!$api.getStorage('loginInfo')) {
+             api.openWin({
+                 name: 'login_choose',
+                 url: './login_choose.html'
+             });
+             return;
+         }
+         var accessToken = $api.getStorage('loginInfo').id;
+
+         headers["authorization"] = accessToken;
+     }
 
      api.showProgress({
          title: '加载中',
