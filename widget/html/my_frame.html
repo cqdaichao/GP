@@ -215,28 +215,30 @@
             <img src="../image/my/my_bg.png" class="loginbg">
             <div id="user">
                 <div class="logins">
+                    <!-- <div class="login_pic tel" tapmode onclick="fnTel()"></div> -->
                     <div class="login_pic tel" tapmode onclick="fnTel()"></div>
                     <!-- <div class="login_pic wx"></div>
                     <div class="login_pic qq" tapmode onclick="fnSlipeToQq();"></div>
                     <div class="login_pic wb"></div> -->
                 </div>
-                <div class="text" tapmode onclick="fnMorelogin()"></div>
+                <div class="text" tapmode onclick="fnTel()"></div>
+                <!-- <div class="text" tapmode onclick="fnMorelogin()"></div> -->
             </div>
         </div>
-        <div class="my_content">
+        <!-- <div class="my_content">
             <div class="cont collect" tapmode onclick="fnFavorite()">收藏</div>
             <div class="cont night">夜间</div>
             <div class="cont set" tapmode onclick="fnSet()">设置</div>
-        </div>
-        <div class="h10"></div>
-        <div class="firstblock">
+        </div> -->
+        <!-- <div class="h10"></div> -->
+        <!-- <div class="firstblock">
             <div class="item" tapmode="item-hov" onclick="fnDynamic()">
                 好友动态
                 <img src="../image/my/arrow.png" class="item_arrow">
             </div>
-        </div>
-        <div class="h10"></div>
-        <div class="secondblock">
+        </div> -->
+        <!-- <div class="h10"></div> -->
+        <!-- <div class="secondblock">
             <div class="item" tapmode="item-hov" onclick="fnInform()">
                 通知
                 <img src="../image/my/arrow.png" class="item_arrow">
@@ -266,7 +268,7 @@
                 反馈
                 <img src="../image/my/arrow.png" class="item_arrow">
             </div>
-        </div>
+        </div> -->
     </body>
     <script type="text/javascript" src="../script/api.js"></script>
     <script type="text/javascript" src="../script/SHA1.js"></script>
@@ -397,44 +399,7 @@
             });
         }
 
-        function fnRegister(userName, password, qqId) {
-            var emailText = userName,
-                passwordText = password;
-            api.showProgress({
-                title: '注册中',
-                modal: true
-            });
-            var body = JSON.stringify({
-                username: emailText,
-                password: passwordText,
-                qqId: qqId
-            });
 
-            api.ajax({
-                url: 'https://d.apicloud.com/mcm/api/user',
-                method: 'post',
-                timeout: 8,
-                dataType: 'json',
-                returnAll: false,
-                "headers": {
-                    "X-APICloud-AppId": "A6918573369588",
-                    "X-APICloud-AppKey": appKey1,
-                    "Content-Type": "application/json"
-                },
-                "data": {
-                    body: body
-                }
-            }, function(ret, err) {
-                api.hideProgress();
-                if (ret) {
-                    if (ret && ret.id) {
-                        alert('亲爱的：' + ret.info.nickname + ',恭喜你注册成功');
-                    } else {
-                        alert('用户名已存在');
-                    }
-                }
-            });
-        };
 
         function fnLogin() {
             var emailText = userName,
