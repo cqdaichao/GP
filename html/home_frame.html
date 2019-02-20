@@ -50,8 +50,8 @@
                <div class="aui-card-list">
                    <div class="aui-card-list-content-padded">
                      买1：{{=data.buy1_price}}/{{=data.buy1_num}}&nbsp;&nbsp;卖1：{{=data.sale1_price}}/{{=data.sale1_num}}<br/>
-                     <!-- 买2：{{=data.buy2_price}}/{{=data.buy2_num}}&nbsp;&nbsp;卖2：{{=data.sale2_price}}/{{=data.sale2_num}}<br/>
-                     买3：{{=data.buy3_price}}/{{=data.buy3_num}}&nbsp;&nbsp;卖3：{{=data.sale3_price}}/{{=data.sale3_num}} -->
+                     买2：{{=data.buy2_price}}/{{=data.buy2_num}}&nbsp;&nbsp;卖2：{{=data.sale2_price}}/{{=data.sale2_num}}<br/>
+                     <!-- 买3：{{=data.buy3_price}}/{{=data.buy3_num}}&nbsp;&nbsp;卖3：{{=data.sale3_price}}/{{=data.sale3_num}} -->
                    </div>
                    <div class="aui-card-list-footer aui-border-t aui-font-size-12">
                        <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> {{=data.beg_price}}元</div>
@@ -73,8 +73,8 @@
                 <div class="aui-card-list">
                     <div class="aui-card-list-content-padded">
                       买1：{{=data.buy1_price}}/{{=data.buy1_num}}&nbsp;&nbsp;卖1：{{=data.sale1_price}}/{{=data.sale1_num}}<br/>
-                      <!-- 买2：{{=data.buy2_price}}/{{=data.buy2_num}}&nbsp;&nbsp;卖2：{{=data.sale2_price}}/{{=data.sale2_num}}<br/>
-                      买3：{{=data.buy3_price}}/{{=data.buy3_num}}&nbsp;&nbsp;卖3：{{=data.sale3_price}}/{{=data.sale3_num}} -->
+                      买2：{{=data.buy2_price}}/{{=data.buy2_num}}&nbsp;&nbsp;卖2：{{=data.sale2_price}}/{{=data.sale2_num}}<br/>
+                      <!-- 买3：{{=data.buy3_price}}/{{=data.buy3_num}}&nbsp;&nbsp;卖3：{{=data.sale3_price}}/{{=data.sale3_num}} -->
                     </div>
                     <div class="aui-card-list-footer aui-border-t aui-font-size-12">
                       <div><i class="aui-iconfont aui-icon-note aui-font-size-14"></i> {{=data.beg_price}}元</div>
@@ -100,7 +100,7 @@
       fnInitPushRefresh();
       getGpList();
       $api.setStorage('gpCode','');
-
+      //alert($api.setStorage('user_id'));
     };
     var frameName, search_box;
     var headlist, dot;
@@ -237,12 +237,13 @@
               "where": {"code": $api.getStorage('gpCode')},
               "code" : $api.getStorage('gpCode'),
               "skip": skip,
+              "aku":'',
               "page": skip/LIMIT+1,
               "limit": LIMIT
             }
           }, function(ret, err) {
 
-            //alert(JSON.stringify(ret));
+            console.log(JSON.stringify(ret));
 
             api.hideProgress();
             api.refreshHeaderLoadDone();

@@ -276,17 +276,17 @@
             });
         };
 
-        // for (var i = 0; i < video_group.item.length; i++) {
-        //     video_group_frames.push({
-        //         name: 'video_group_' + i,
-        //         url: 'video_frame.html',
-        //         vScrollBarEnabled: false,
-        //         pageParam: {
-        //             type: '视频',
-        //             childType: video_group.item[i].title
-        //         }
-        //     });
-        // };
+        for (var i = 0; i < video_group.item.length; i++) {
+            video_group_frames.push({
+                name: 'video_group_' + i,
+                url: 'video_frame.html',
+                vScrollBarEnabled: false,
+                pageParam: {
+                    type: '视频',
+                    childType: video_group.item[i].title
+                }
+            });
+        };
 
         var topics_group_frames = [{
             name: ' recommentlist_frame',
