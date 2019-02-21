@@ -26,7 +26,7 @@
                 background-color: #f4f5f6;
             }
             .footer {
-                height:47px;
+                height:50px;
                 display: flex;
                 display: -webkit-flex;
                 display: -webkit-box;
@@ -39,12 +39,12 @@
                 flex: 1;
                 -webkit-flex: 1;
                 -webkit-box-flex: 1;
-                height: 47px;
+                height: 50px;
                 box-sizing: border-box;
                 padding-bottom: 8px;
                 padding-top: 30px;
                 color: #585858;
-                font-size: 10px;
+                font-size: 12px;
                 text-align: center;
                 background-size: 22px 22px;
                 background-position: center 5px;
@@ -95,7 +95,7 @@
         <footer id="footer" class="footer">
             <div class="menu gambit active" tapmode="active" onclick="fnChange(0)">消息</div>
             <div class="menu home  " tapmode="active" onclick="fnChange(1)">主页</div>
-            <div class="menu video" tapmode="active" onclick="fnChange(2)">股圈</div>
+            <div class="menu video" tapmode="active" onclick="fnChange(2)">社区</div>
             <div class="menu my" tapmode="active" onclick="fnChange(3)">我的</div>
         </footer>
     </body>
@@ -321,7 +321,7 @@
                             value: ret.index
                         });
                     } else {
-                        changeStyle(ret.index);
+                        //changeStyle(ret.index);
                     }
                 });
             } else {

@@ -71,7 +71,7 @@
             font-size: 13px;
             color: #fff;
             border-radius: 4px;
-            background-color: #999;
+            background-color: #e05e5e;
             margin: 20px 0 10px;
         }
 
@@ -139,17 +139,18 @@
                 code: codeText
             })
         }, 'application/json', function(ret, err) {
-            //alert(JSON.stringify(err));
+            var loginInfo=JSON.stringify(ret.data);
+            console.log(loginInfo);
             if (ret.code==0) {
               var data=ret.data;
-              $api.setStorage('user_id', data.user_id);
-              $api.setStorage('token', data.token);
+              $api.setStorage('loginInfo', loginInfo);
               api.execScript({
                   name:'main',
                   frameName: 'my_frame',
-                  script:'loginMobile("'+telText+'");'
+                  script:'loginMobile()'
               });
               api.closeWin();
+
             }else{
               //alert(JSON.stringify(ret));
               alert(ret.msg);

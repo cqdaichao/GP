@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widget id="A6005943128824" version="0.0.1">
+<widget id="A6005943128824" version="0.0.3">
     <name>GP</name>
     <description>
         Gpx
@@ -30,8 +30,5 @@
     <permission name="bootCompleted" />
     <permission name="hardware" />
     <preference name="softInputMode" value="resize"/>
-    <feature name="qq">
-        <param name="urlScheme" value="tencent619106640" />
-        <param name="apiKey" value="A141ECB6-CB34-6FFD-8842-65BBA6602A37" />
-    </feature>
+
 </widget>

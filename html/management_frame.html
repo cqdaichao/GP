@@ -12,14 +12,37 @@
                 height: 100%;
                 background-color: #f4f5f6;
             }
-            
+            .title {
+                height: 43px;
+                line-height: 43px;
+                width: 100%;
+                text-align: center;
+                font-size: 16px;
+                color: #222;
+                background-color: #fefefe;
+                border-bottom: 1px solid #d8d8d8;
+                box-sizing: border-box;
+                position: relative;
+            }
+
+            .title .arrow {
+                width: 43px;
+                height: 43px;
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                background-image: url(../image/pic22.png);
+                background-repeat: no-repeat;
+                background-size: 11px 19px;
+                background-position: center center;
+            }
             .sky1 {
                 width: 100%;
                 height: 8px;
                 background-color: #f4f5f6;
                 border-bottom: 1px solid #e8e8e8;
             }
-            
+
             .sky2 {
                 width: 100%;
                 height: 40px;
@@ -39,7 +62,7 @@
                 border-top: 1px solid #e8e8e8;
                 border-bottom: 1px solid #e8e8e8;
             }
-            
+
             .cont {
                 background-color: #fff;
                 box-sizing: border-box;
@@ -63,7 +86,7 @@
                 color: #222;
                 position: relative;
            }
-            
+
             .t2 {
                 height: 49px;
                 line-height: 49px;
@@ -82,7 +105,7 @@
                 position: relative;
                 border-bottom:1px solid #e8e8e8;
             }
-            
+
             .r {
                 position: absolute;
                 right: 0;
@@ -94,7 +117,7 @@
                 line-height: 49px;
                 text-align: center;
             }
-            
+
             .close {
                 width: 85px;
                 height: 49px;
@@ -112,7 +135,7 @@
                 line-height: 49px;
                 text-align: center;
             }
-            
+
             .active .close {
                 width: 85px;
                 height: 49px;
@@ -130,7 +153,7 @@
                 line-height: 49px;
                 text-align: center;
             }
-            
+
             .arrow {
                 width: 40px;
                 height: 50px;
@@ -140,9 +163,9 @@
                 background-position: center center;
 
             }
-            
+
             .arrow_t1 {
-            	width: 40px;
+            	  width: 40px;
                 height: 70px;
                 background-image: url(../image/my/arrow.png);
                 background-repeat: no-repeat;
@@ -177,6 +200,7 @@
     </head>
 
     <body>
+
         <div class="sky1"></div>
         <div class="cont">
             <div class="t1">头像
@@ -191,21 +215,21 @@
             	<div class="text">这个人很懒，什么都没留下</div>
                 <div class="r arrow"></div>
             </div>
-            <div class="t3">
+            <!-- <div class="t3">
             	手机号
-            	<div class="text1">绑定手机号</div>
+            	<div class="text1">更换手机号</div>
                 <div class="r arrow"></div>
-            </div>
+            </div> -->
         </div>
         <div class="sky2">账号绑定</div>
         <div class="cont" id="content">
             <div class="btn" tapmode>微信
                 <div class="close"></div>
             </div>
-            <div class="btn active" tapmode>腾讯QQ
+            <div class="btn active" tapmode>QQ
                 <div class="close"></div>
             </div>
-            <div class="btn" tapmode>新浪微博
+            <!-- <div class="btn" tapmode>新浪微博
                 <div class="close"></div>
             </div>
             <div class="btn" tapmode>腾讯微博
@@ -213,7 +237,7 @@
             </div>
             <div style="border-bottom: none;" class="btn" tapmode>人人网
                 <div class="close"></div>
-            </div>
+            </div> -->
         </div>
         <div class="sky3"></div>
         <div class="back" tapmode onclick="fnMyfrome()">退出登录</div>
@@ -227,17 +251,24 @@
         };
 
         function fnMyfrome(){
-            api.openWin({
-                name: 'my_frame',
-                url: './my_frame.html',
-                
-            });
+           $api.setStorage('loginInfo','');
+           api.execScript({
+               name:'main',
+               frameName: 'my_frame',
+               script:'loginMobile()'
+           });
+           api.closeWin();
+            //  api.openWin({
+            //      name: 'my_frame',
+            //      url: './my_frame.html',
+             //
+            //  });
         };
 
         window.onload = function(){
             var content = document.getElementById('content');
             var btns=content.getElementsByClassName('btn');
-          
+
              for(var i=0;i<btns.length;i++){
                 btns[i].onclick=function(){
                     if(this.className=="btn"){
