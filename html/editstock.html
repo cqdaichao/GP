@@ -10,6 +10,7 @@
             html,
             body {
                 height: 100%;
+                background-color: #f4f5f6;
             }
 
             .title {
@@ -31,31 +32,19 @@
                 position: absolute;
                 left: 0;
                 bottom: 0;
-               background-image: url(../image/gambit/arrow.png);
+                background-image: url(../image/pic22.png);
                 background-repeat: no-repeat;
-                background-size: 10px 18px;
+                background-size: 11px 19px;
                 background-position: center center;
             }
-            .edit {
-                position: absolute;
-                top: 0;
-                right: 10px;
-                height: 45px;
-                width: 60px;
-                line-height: 45px;
-                text-align: center;
-            }
-
         </style>
     </head>
 
     <body>
         <div class="title" id="header">
-            <div class="arrow event-back"></div>
-            我的股票代码
-            <div class="edit" onclick="addStock()">+ 新增</div>
+            <div class="arrow event-back" onclick="s();"></div>
+            编辑股票
         </div>
-
     </body>
     <script type="text/javascript" src="../script/api.js"></script>
     <script type="text/javascript" src="../script/common.js"></script>
@@ -64,13 +53,7 @@
             fnReady();
             fnReadyFrame();
         };
-        //新增
-        function addStock() {
-            api.openWin({
-                name: 'addstock',
-                url: './addstock.html',
-            });
-        }
+
     </script>
 
 </html>

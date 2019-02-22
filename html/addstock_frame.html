@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../aui2/css/aui.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #f4f5f6;
+        }
+
+        .login_box {
+            box-sizing: border-box;
+            padding: 30px 20px;
+        }
+
+        .phone {
+            width: 100%;
+            height: 43px;
+            line-height: 43px;
+            border: 1px solid #e8e8e8;
+            background-color: #fff;
+        }
+
+        .phone input,
+        .password input {
+            width: 100%;
+            height: 43px;
+            line-height: 16px;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+            box-sizing: border-box;
+            padding-left: 10px;
+        }
+
+        .phone input,.password input::-webkit-input-placeholder{
+        color: #bdbbbb;
+        }
+
+        .password {
+            width: 100%;
+            height: 43px;
+            border: 1px solid #e8e8e8;
+            border-top: none;
+            background-color: #fff;
+            position: relative;
+        }
+
+        .find {
+            width: 110px;
+            height: 43px;
+            line-height: 43px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-image: url(../image/my/line.png);
+            background-repeat: no-repeat;
+            background-size: 1px 14px;
+            background-position: left center;
+        }
+
+        .login {
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            text-align: center;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            background-color: #e05e5e;
+            margin: 20px 0 10px;
+        }
+
+        .register {
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            text-align: center;
+            font-size: 13px;
+            color: #2a90d7;
+        }
+        #ulList{background: #fff;}
+        #ulList li{
+          margin: 3px auto;;
+          border-bottom: 1px #f1f1f1 solid;
+          line-height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login_box">
+      <div class="aui-searchbar" id="search">
+          <div class="aui-searchbar-input aui-border-radius">
+              <i class="aui-iconfont aui-icon-search"></i>
+              <input type="search" placeholder="请输入股票代码/名称" id="stock" oninput="search()">
+              <div class="aui-searchbar-clear-btn">
+                  <i class="aui-iconfont aui-icon-close"></i>
+              </div>
+          </div>
+      </div>
+      <div>
+        <ul id="ulList">
+        </ul>
+      </div>
+        <div class="password">
+            <input type="text" placeholder="股票名称" id="name" readonly="readonly" >
+        </div>
+        <div class="password">
+            <input type="text" placeholder="股票代码" id="code" readonly="readonly" >
+        </div>
+        <div class="password">
+            <input type="text" placeholder="成本价" id="price">
+            <div class="find" tapmode  >单位（元）</div>
+        </div>
+        <div class="password">
+            <input type="text" placeholder="数量" id="num">
+            <div class="find" >单位（股）</div>
+        </div>
+        <div class="login" tapmode onclick="fnSub()">提交</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/request.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      fnInit();
+      fnReady();
+    };
+
+    var loginInfo=JSON.parse($api.getStorage('loginInfo'));
+    var userId=loginInfo.id;
+
+    var stock,price,num;
+    function fnInit() {
+        stock = $api.byId('stock');
+        price = $api.byId('price');
+        num = $api.byId('num');
+    };
+
+    function search() {
+       var stockTxt = stock.value;
+       api.showProgress({
+        title: '提交中',
+        modal: true
+    });
+       fnPost('user/search', {
+        body: JSON.stringify({
+            key: stockTxt,
+        })
+    }, 'application/json', function(ret, err) {
+        var data=JSON.stringify(ret.data);
+        console.log(data);
+        var obj=ret.data;
+        var html='';
+        for(var key in obj){
+                  html += '<li onclick="setVal(\''+ obj[key]["name"] +'\',\''+ obj[key]["code"] +'\')";>'+ obj[key]["name"] +' - '+ obj[key]["code"] +'</li>';
+        }
+
+        $api.html($api.byId('ulList'),html);
+    });
+    }
+
+    //设置值
+    function setVal(name,code){
+      $api.val($api.byId('name'), name);
+      $api.val($api.byId('code'), code);
+      $api.html($api.byId('ulList'),'');
+    }
+
+
+    function fnSub() {
+
+
+
+       var nameTxt = $api.byId('name').value;
+       var codeTxt = $api.byId('code').value;
+       var priceTxt = price.value;
+       var numTxt   = num.value;
+       if (nameTxt=='') {
+         alert('股票代码/名称不能为空');
+         return false;
+       }
+       if (priceTxt=='') {
+         alert('成本价不能为空');
+         return false;
+       }
+       if (numTxt=='') {
+         alert('数量不能为空');
+         return false;
+       }
+       api.showProgress({
+        title: '提交中',
+        modal: true
+    });
+       fnPost('user/add_stock', {
+        body: JSON.stringify({
+            uid: userId,
+            name: nameTxt,
+            code: codeTxt,
+            cost_price: priceTxt,
+            stock_num: numTxt
+        })
+    }, 'application/json', function(ret, err) {
+        var loginInfo=JSON.stringify(ret.data);
+        console.log(loginInfo);
+        if (ret.code==0) {
+          alert('添加成功!');
+          api.sendEvent({
+              name: 'myEvent',
+              extra: {key: 'value'}
+          });
+          api.closeWin();
+        }else{
+          //alert(JSON.stringify(ret));
+          alert(ret.msg);
+        }
+    });
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>

@@ -28,7 +28,7 @@
 
        <div class="aui-list-item-input" >
               <select name="selectX" id="gPListX" onchange="resh()">
-                 <<option value="">全部消息</option>
+
               </select>
        </div>
      </div>
@@ -101,6 +101,12 @@
       getGpList();
       $api.setStorage('gpCode','');
       //alert($api.setStorage('user_id'));
+      api.addEventListener({
+        name: 'myEvent'
+    }, function(ret, err) {
+        getGpList();
+        headList(progress, isPull);
+    });
     };
     var frameName, search_box;
     var headlist, dot;
@@ -111,6 +117,14 @@
     progress = true,
     isPull = true;
     var typeNum;
+
+    if ($api.getStorage('loginInfo')) {
+      var loginInfo=JSON.parse($api.getStorage('loginInfo'));
+      var userId=loginInfo.id;
+    }else{
+      var userId='';
+    }
+
 
     function fnChangeMessage() {
       var frameName = api.frameName;
@@ -136,12 +150,13 @@
       //获取消息分类
       fnPost('index/gpList', {
           body: JSON.stringify({
-              userId: 1,
+              userId: userId,
           })
       }, 'application/json', function(ret, err) {
           var obj = ret;
           var html = "";
           var gpCode=$api.getStorage('gpCode');
+          html += '<option value="">全部消息</option>';
           for(var key in obj){
                   if (gpCode==obj[key]["code"]) {
                     html += '<option  value="'+ obj[key]["code"] +'">'+ obj[key]["name"] +'</option>';
@@ -150,13 +165,14 @@
                   }
 
           }
-          $api.append($api.byId('gPListX'),html);
+          $api.html($api.byId('gPListX'),html);
       });
     }
 
     function resh() {
          var val=$api.byId('gPListX').value;
          $api.setStorage('gpCode',val);
+
          headList(progress, true);
     }
 
@@ -232,18 +248,20 @@
           var Headlist = client.Factory("index/msg");
           fnChangeMessage();
 
+          console.log(userId);
+
           Headlist.query({
             "filter": {
               "where": {"code": $api.getStorage('gpCode')},
               "code" : $api.getStorage('gpCode'),
               "skip": skip,
-              "aku":'',
+              "aku":userId,
               "page": skip/LIMIT+1,
               "limit": LIMIT
             }
           }, function(ret, err) {
 
-            //console.log(JSON.stringify(ret));
+            console.log(JSON.stringify(err));
 
             api.hideProgress();
             api.refreshHeaderLoadDone();

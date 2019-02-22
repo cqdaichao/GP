@@ -52,7 +52,7 @@
                 background-image: url(../image/my/arrow.png);
                 background-repeat: no-repeat;
                 background-size: 6px 12px;
-                background-position: center center;
+                background-position: top center;
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -70,12 +70,15 @@
 </head>
 <body>
   <div class="content"  >
-    今日全部盈利：<span id="rateNowAll"></span>  全部盈利：<span id="rateAll"></span>
+    <div class="cont">
+    今日盈利：<span id="rateNowAll"></span><br/>
+    当前盈利：<span id="rateAll"></span>
+  </div>
 	</div>
 	<div class="content"  id="GpList">
 
 	</div>
-  <div class="pic"></div>
+  <!-- <div class="pic"></div> -->
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
@@ -84,6 +87,11 @@
     apiready = function(){
         fnInitPull();
           getGpList();
+          api.addEventListener({
+            name: 'myEvent'
+        }, function(ret, err) {
+            getGpList();
+        });
     };
 
     // 刷新
@@ -102,10 +110,30 @@
       });
     };
 
+    //编辑
+    function editStock(id,code,name,cost_price,stock_num) {
+        api.sendEvent({
+            name: 'editCode',
+            extra: {code: code,name:name}
+        });
+        api.openWin({
+            name: 'editstock',
+            url: './editstock_frame.html',
+            pageParam: {
+                id: id,
+                code: code,
+                name: name,
+                cost_price:cost_price,
+                stock_num:stock_num
+            }
+        });
+    }
+
+
+
 
     //获取股票列表
     function getGpList() {
-
       if ($api.getStorage('loginInfo')) {
         var loginInfo=JSON.parse($api.getStorage('loginInfo'));
         fnPost('User/gpList', {
@@ -114,12 +142,20 @@
             })
         }, 'application/json', function(ret, err) {
             var obj = ret.gpList;
-            $api.html($api.byId('rateNowAll'),ret.rateNowAll+'元');
-            $api.html($api.byId('rateAll'),ret.rateAll+'元');
+            if (ret.rateNowAll>0) {
+              $api.html($api.byId('rateNowAll'),'<span style="color:red;">'+ret.rateNowAll+'元</span>');
+            }else{
+              $api.html($api.byId('rateNowAll'),'<span style="color:green;">'+ret.rateNowAll+'元</span>');
+            }
+            if (ret.rateAll>0) {
+              $api.html($api.byId('rateAll'),'<span style="color:red;">'+ret.rateAll+'元</span>');
+            }else{
+              $api.html($api.byId('rateAll'),'<span style="color:green;">'+ret.rateAll+'元</span>');
+            }
             var html = "";
             var gpCode=$api.getStorage('gpCode');
             for(var key in obj){
-              html += '<div class="cont">';
+              html += '<div class="cont" onclick="editStock(\''+ obj[key]["id"] +'\',\''+ obj[key]["code"] +'\',\''+ obj[key]["name"] +'\',\''+ obj[key]["cost_price"] +'\',\''+ obj[key]["stock_num"] +'\')">';
         	    //html += '     <img src="../image/my/t4.png">';
         	    html += '     <div class="text1">股票：'+obj[key]["name"]+'['+obj[key]["code"]+']</div>';
               html += '    <div class="text2"> 现价：'+obj[key]["cur_price"]+'元 </div>';

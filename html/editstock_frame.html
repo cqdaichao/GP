@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../aui2/css/aui.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #f4f5f6;
+        }
+
+        .login_box {
+            box-sizing: border-box;
+            padding: 30px 20px;
+        }
+
+        .phone {
+            width: 100%;
+            height: 43px;
+            line-height: 43px;
+            border: 1px solid #e8e8e8;
+            background-color: #fff;
+        }
+
+        .phone input,
+        .password input {
+            width: 100%;
+            height: 43px;
+            line-height: 16px;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+            box-sizing: border-box;
+            padding-left: 10px;
+        }
+
+        .phone input,.password input::-webkit-input-placeholder{
+        color: #bdbbbb;
+        }
+
+        .password {
+            width: 100%;
+            height: 43px;
+            border: 1px solid #e8e8e8;
+            border-top: none;
+            background-color: #fff;
+            position: relative;
+        }
+
+        .find {
+            width: 110px;
+            height: 43px;
+            line-height: 43px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-image: url(../image/my/line.png);
+            background-repeat: no-repeat;
+            background-size: 1px 14px;
+            background-position: left center;
+        }
+
+        .login {
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            text-align: center;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            background-color: #e05e5e;
+            margin: 20px 0 10px;
+        }
+        .title {
+            height: 43px;
+            line-height: 43px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: #222;
+            background-color: #fefefe;
+            border-bottom: 1px solid #d8d8d8;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .title .arrow {
+            width: 43px;
+            height: 43px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background-image: url(../image/pic22.png);
+            background-repeat: no-repeat;
+            background-size: 11px 19px;
+            background-position: center center;
+        }
+        .register {
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            text-align: center;
+            font-size: 13px;
+            color: #2a90d7;
+        }
+        #ulList{background: #fff;}
+        #ulList li{
+          margin: 3px auto;;
+          border-bottom: 1px #f1f1f1 solid;
+          line-height: 30px;
+        }
+        .edit {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            height: 45px;
+            width: 60px;
+            line-height: 45px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="title" id="header">
+      <div class="arrow event-back" onclick="s();"></div>
+      编辑股票
+  </div>
+  <div class="edit" onclick="DelStock()" style="color:red">删除</div>
+    <div class="login_box">
+
+      <div>
+        <ul id="ulList">
+        </ul>
+      </div>
+        <div class="password">
+            <input type="text" placeholder="股票名称" id="name" readonly="readonly" >
+        </div>
+        <div class="password">
+            <input type="text" placeholder="股票代码" id="code" readonly="readonly" >
+        </div>
+        <div class="password">
+            <input type="text" placeholder="成本价" id="price">
+            <div class="find" tapmode  >单位（元）</div>
+        </div>
+        <div class="password">
+            <input type="text" placeholder="数量" id="num">
+            <div class="find" >单位（股）</div>
+        </div>
+        <div class="login" tapmode onclick="fnSub()" >保存</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/request.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      fnInit();
+      fnReady();
+      var name=api.pageParam.name;
+      var code=api.pageParam.code;
+      setVal();
+    };
+
+    var loginInfo=JSON.parse($api.getStorage('loginInfo'));
+    var userId=loginInfo.id;
+
+    var stock,price,num;
+    function fnInit() {
+        stock = $api.byId('stock');
+        price = $api.byId('price');
+        num = $api.byId('num');
+    };
+
+    //删除
+    function DelStock(){
+      if(confirm("确定要删除数据吗？"))
+      {
+        fnPost('user/del_stock', {
+         body: JSON.stringify({
+             id: api.pageParam.id,
+         })
+     }, 'application/json', function(ret, err) {
+         var loginInfo=JSON.stringify(ret.data);
+         console.log(JSON.stringify(ret));
+         if (ret.code==0) {
+           alert('编辑成功!');
+           api.sendEvent({
+               name: 'myEvent',
+               extra: {key: 'value'}
+           });
+           api.closeWin();
+         }else{
+           //alert(JSON.stringify(ret));
+           alert(ret.msg);
+         }
+     });
+      }
+    }
+
+
+
+    //设置值
+    function setVal(name,code){
+      $api.val($api.byId('name'), api.pageParam.name);
+      $api.val($api.byId('code'), api.pageParam.code);
+      $api.val($api.byId('price'), api.pageParam.cost_price);
+      $api.val($api.byId('num'), api.pageParam.stock_num);
+    }
+
+
+    function fnSub() {
+
+
+
+       var nameTxt = $api.byId('name').value;
+       var codeTxt = $api.byId('code').value;
+       var priceTxt = price.value;
+       var numTxt   = num.value;
+       if (nameTxt=='') {
+         alert('股票代码/名称不能为空');
+         return false;
+       }
+       if (priceTxt=='') {
+         alert('成本价不能为空');
+         return false;
+       }
+       if (numTxt=='') {
+         alert('数量不能为空');
+         return false;
+       }
+       api.showProgress({
+        title: '提交中',
+        modal: true
+    });
+       fnPost('user/edit_stock', {
+        body: JSON.stringify({
+            id: api.pageParam.id,
+            uid: userId,
+            name: nameTxt,
+            code: codeTxt,
+            cost_price: priceTxt,
+            stock_num: numTxt
+        })
+    }, 'application/json', function(ret, err) {
+        var loginInfo=JSON.stringify(ret.data);
+        console.log(JSON.stringify(ret));
+        if (ret.code==0) {
+          alert('编辑成功!');
+          api.sendEvent({
+              name: 'myEvent',
+              extra: {key: 'value'}
+          });
+          api.closeWin();
+        }else{
+          //alert(JSON.stringify(ret));
+          alert(ret.msg);
+        }
+    });
+   }
+
+
+
+</script>
+
+</html>
